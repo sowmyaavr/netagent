@@ -1,0 +1,152 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netagent"
+version = "0.1.0"
+description = "Adaptive Clarification for LLM Agents: A Risk-Weighted Approach to Network Fault Remediation"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Sowmya AVR", email = "sowmyaavr@users.noreply.github.com" },
+]
+keywords = [
+    "llm",
+    "llm-agents",
+    "agentic-ai",
+    "ai-safety",
+    "network-automation",
+    "aiops",
+    "cisco",
+    "bgp",
+    "ospf",
+    "rag",
+    "uncertainty-quantification",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: System :: Networking",
+]
+
+dependencies = [
+    # LLM clients
+    "anthropic>=0.40.0",
+    "ollama>=0.3.0",
+    # Agent framework
+    "langgraph>=0.2.0",
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langchain-anthropic>=0.2.0",
+    # RAG / embeddings
+    "chromadb>=0.5.0",
+    "sentence-transformers>=3.0.0",
+    # Network automation
+    "pyats[full]>=24.0",
+    "netmiko>=4.3.0",
+    "napalm>=5.0.0",
+    "paramiko>=3.4.0",
+    # Web / UI
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "streamlit>=1.40.0",
+    # Data / eval
+    "pydantic>=2.9.0",
+    "pyyaml>=6.0",
+    "pandas>=2.2.0",
+    "numpy>=1.26.0",
+    "scikit-learn>=1.5.0",
+    "matplotlib>=3.9.0",
+    "seaborn>=0.13.0",
+    # Logging / CLI
+    "structlog>=24.0.0",
+    "rich>=13.9.0",
+    "typer>=0.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.7.0",
+    "black>=24.10.0",
+    "mypy>=1.13.0",
+    "pre-commit>=4.0.0",
+    "ipykernel>=6.29.0",
+    "jupyter>=1.1.0",
+]
+robot = [
+    "robotframework>=7.1",
+    "robotframework-pyats>=2.5.0",
+]
+docs = [
+    "mkdocs-material>=9.5.0",
+    "mkdocstrings[python]>=0.27.0",
+]
+tracking = [
+    "wandb>=0.18.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/sowmyaavr/netagent"
+Repository = "https://github.com/sowmyaavr/netagent.git"
+Issues = "https://github.com/sowmyaavr/netagent/issues"
+
+[project.scripts]
+netagent = "netagent.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["netagent*"]
+exclude = ["tests*", "eval*", "testbed*", "ui*"]
+
+# ─── Ruff ───
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [".venv", "build", "dist"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific
+]
+ignore = ["E501"]  # line-length handled by formatter
+
+# ─── Black ───
+[tool.black]
+line-length = 100
+target-version = ["py311", "py312"]
+
+# ─── Mypy ───
+[tool.mypy]
+python_version = "3.11"
+strict = false
+warn_unused_ignores = true
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+# ─── Pytest ───
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-ra -q --strict-markers --cov=netagent --cov-report=term-missing"
+asyncio_mode = "auto"

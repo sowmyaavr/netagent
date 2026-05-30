@@ -1,0 +1,44 @@
+# Example BGP fault scenario — used as the schema reference for Week 2.
+id: bgp_md5_mismatch_r1_r2
+protocol: bgp
+topology: T2
+severity: high
+description: >
+  BGP session between R1 (AS 65001) and R2 (AS 65002) fails to establish
+  because the MD5 authentication key on R1 was changed but R2 still uses
+  the original key. Engineers usually miss this because routes simply stop
+  flowing without obvious cause in show ip route.
+
+trigger:
+  device: R1
+  commands:
+    - configure terminal
+    - router bgp 65001
+    - neighbor 10.0.0.2 password BAD_MD5_KEY
+    - end
+
+ground_truth:
+  root_cause: bgp.authentication.md5_mismatch
+  affected_devices: [R1, R2]
+  diagnostic_signals:
+    - "show ip bgp summary on R1 shows Idle/Active for 10.0.0.2"
+    - "show log on R1 shows 'BGP-3-NOTIFICATION: ... bad MAC'"
+    - "show log on R2 shows authentication failure"
+
+  remediation:
+    device: R1
+    commands:
+      - configure terminal
+      - router bgp 65001
+      - no neighbor 10.0.0.2 password
+      - neighbor 10.0.0.2 password ORIGINAL_KEY
+      - end
+
+  verification:
+    device: R1
+    expect:
+      - cmd: show ip bgp summary
+        contains: "10.0.0.2"
+        contains_not: "Active"
+      - cmd: show ip bgp summary
+        contains: "Established"
