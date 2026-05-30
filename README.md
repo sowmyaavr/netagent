@@ -221,7 +221,7 @@ MIT — see [LICENSE](LICENSE).
 
 ## 📬 Contact
 
-**Sowmya AVR** — [GitHub](https://github.com/sowmyaavr)
+**Sowmyaa VR** — [GitHub](https://github.com/sowmyaavr)
 
 ---
 
